@@ -1,40 +1,25 @@
-import { registerUser } from '@/services/slices/userSlice';
-import { useDispatch, useSelector } from '@/services/store';
-import { RegisterUI } from '@ui-pages';
-import { type SyntheticEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { logoutUser } from '@/services/slices/userSlice';
+import { ProfileMenuUI } from '@ui';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-export const Register = (): React.JSX.Element => {
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+import { useDispatch } from '@services/store';
+
+export const ProfileMenu = (): React.JSX.Element => {
+  const { pathname } = useLocation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const error = useSelector((state) => state.user.error);
 
-  const handleSubmit = (e: SyntheticEvent): void => {
-    e.preventDefault();
-    void (async (): Promise<void> => {
-      try {
-        await dispatch(registerUser({ name: userName, email, password })).unwrap();
-        void navigate('/');
-      } catch (err: unknown) {
-        console.error('Ошибка регистрации:', err);
-      }
-    })();
+  const handleLogout = (): void => {
+    void dispatch(logoutUser())
+      .unwrap()
+      .then(() => {
+        void navigate('/login');
+      })
+      .catch((err) => {
+        console.error('Ошибка выхода:', err);
+      });
   };
 
-  return (
-    <RegisterUI
-      errorText={error ?? ''}
-      email={email}
-      userName={userName}
-      password={password}
-      setEmail={setEmail}
-      setPassword={setPassword}
-      setUserName={setUserName}
-      handleSubmit={handleSubmit}
-    />
-  );
+  return <ProfileMenuUI handleLogout={handleLogout} pathname={pathname} />;
 };
