@@ -1,23 +1,47 @@
+import { useSelector } from '@/services/store';
+import { getOrderByNumberApi } from '@api';
 import { Preloader, OrderInfoUI } from '@ui';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import type { TIngredient } from '@utils-types';
+import type { TIngredient, TOrder } from '@utils-types';
 
 export const OrderInfo = (): React.JSX.Element => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0,
-  };
+  const { number } = useParams<{ number: string }>();
 
-  const ingredients: TIngredient[] = [];
+  const [orderDataState, setOrderDataState] = useState<TOrder | null>(null);
 
-  /* Готовим данные для отображения */
+  const feedOrders = useSelector((state) => state.feed.orders);
+  const userOrders = useSelector((state) => state.user.orders);
+  const orders = useMemo(() => {
+    return [...feedOrders, ...userOrders];
+  }, [feedOrders, userOrders]);
+
+  const foundOrder = useMemo(() => {
+    if (!orders.length || !number) return null;
+    return orders.find((order: TOrder) => order.number === Number(number)) ?? null;
+  }, [orders, number]);
+
+  useEffect(() => {
+    if (!foundOrder && number) {
+      getOrderByNumberApi(Number(number))
+        .then((res) => {
+          if (res.orders && res.orders.length > 0) {
+            setOrderDataState(res.orders[0]);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [foundOrder, number]);
+
+  const orderData = foundOrder ?? orderDataState;
+
+  const ingredients: TIngredient[] = useSelector(
+    (state) => state.ingredients.ingredients
+  );
+
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 
