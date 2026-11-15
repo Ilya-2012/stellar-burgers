@@ -86,8 +86,6 @@ const AppContent = ({
 const RouteComponent = (): React.JSX.Element => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Явно типизируем location.state, чтобы избавиться от any, и используем ?? вместо ||
   const state = location.state as { background?: Location } | null;
   const background = state?.background;
 
@@ -130,7 +128,7 @@ const RouteComponent = (): React.JSX.Element => {
           <Route
             path="/ingredients/:id"
             element={
-              <Modal title="Детали ингредиента" onClose={handleCloseModal}>
+              <Modal title="" onClose={handleCloseModal}>
                 <IngredientDetails />
               </Modal>
             }
@@ -138,7 +136,7 @@ const RouteComponent = (): React.JSX.Element => {
           <Route
             path="/feed/:number"
             element={
-              <Modal title="Детали заказа" onClose={handleCloseModal}>
+              <Modal title="" onClose={handleCloseModal}>
                 <OrderInfo />
               </Modal>
             }
@@ -146,9 +144,13 @@ const RouteComponent = (): React.JSX.Element => {
           <Route
             path="/profile/orders/:number"
             element={
-              <Modal title="Детали заказа" onClose={handleCloseModal}>
-                <OrderInfo />
-              </Modal>
+              <ProtectedRoute
+                element={
+                  <Modal title="" onClose={handleCloseModal}>
+                    <OrderInfo />
+                  </Modal>
+                }
+              />
             }
           />
         </Routes>

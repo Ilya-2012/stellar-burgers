@@ -36,8 +36,12 @@ export const constructorSlice = createSlice({
       const [moveItem] = state.ingredients.splice(from, 1);
       state.ingredients.splice(to, 0, moveItem);
     },
+    resetOrderBurger: (state) => {
+      state.bun = null;
+      state.ingredients = [];
+    },
   },
 });
 
-export const { addIngredient, removeIngredient, moveIngridient } =
+export const { addIngredient, removeIngredient, moveIngridient, resetOrderBurger } =
   constructorSlice.actions;

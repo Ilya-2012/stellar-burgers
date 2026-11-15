@@ -1,3 +1,4 @@
+import { resetOrderBurger } from '@/services/slices/constructorSlice';
 import { clearOrderModalData, orderBurger } from '@/services/slices/userSlice';
 import { useDispatch, useSelector } from '@/services/store';
 import { BurgerConstructorUI } from '@ui';
@@ -32,7 +33,8 @@ export const BurgerConstructor = (): React.JSX.Element | null => {
 
   const closeOrderModal = (): void => {
     void dispatch(clearOrderModalData());
-    void navigate(-1);
+    void dispatch(resetOrderBurger());
+    void navigate('/');
   };
 
   const price = useMemo(
