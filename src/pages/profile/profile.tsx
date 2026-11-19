@@ -33,7 +33,18 @@ export const Profile = (): React.JSX.Element => {
         email: formValue.email,
         password: formValue.password,
       })
-    );
+    )
+      .unwrap()
+      .then((updatedUser) => {
+        setFormValue({
+          name: updatedUser?.user?.name ?? updatedUser.user.name ?? formValue.name,
+          email: updatedUser?.user?.email ?? updatedUser.user.email ?? formValue.email,
+          password: '',
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const handleCancel = (e: SyntheticEvent): void => {
