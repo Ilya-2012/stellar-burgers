@@ -45,3 +45,5 @@ export const constructorSlice = createSlice({
 
 export const { addIngredient, removeIngredient, moveIngridient, resetOrderBurger } =
   constructorSlice.actions;
+
+export const constructorReducer = constructorSlice.reducer;
