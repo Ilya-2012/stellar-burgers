@@ -1,5 +1,6 @@
 import { fetchIngredients } from '@/services/slices/ingredientsSlice';
-import { getUser } from '@/services/slices/userSlice';
+import { authChecked, getUser } from '@/services/slices/userSlice';
+import { getCookie } from '@/utils/cookie';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import {
   ConstructorPage,
@@ -40,7 +41,12 @@ const App = (): React.JSX.Element => {
 
   useEffect(() => {
     void dispatch(fetchIngredients());
-    void dispatch(getUser());
+
+    if (getCookie('accessToken')) {
+      void dispatch(getUser());
+    } else {
+      void dispatch(authChecked(true));
+    }
   }, [dispatch]);
 
   if (isLoading) {
