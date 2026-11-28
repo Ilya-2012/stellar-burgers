@@ -61,32 +61,32 @@ test.describe('Страница конструктора бургера', () => 
     const burgerConstructor = page.getByTestId('burger-constructor');
     const modalRoot = page.locator('#modals');
 
-    await page.route('**/api/auth/user', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          success: true,
-          user: { email: 'test@test.ru', name: 'Test User' },
-        }),
-      });
-    });
+    //await page.route('**/api/auth/user', async (route) => {
+    //  await route.fulfill({
+    //    status: 200,
+    //    contentType: 'application/json',
+    //    body: JSON.stringify({
+    //      success: true,
+    //      user: { email: 'test@test.ru', name: 'Test User' },
+    //    }),
+    //  });
+    //});
 
-    await page.route('**/api/orders', async (route) => {
-      if (route.request().method() === 'POST') {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            success: true,
-            name: 'Краторный марсианский бургер',
-            order: { number: 12345 },
-          }),
-        });
-      } else {
-        await route.continue();
-      }
-    });
+    //await page.route('**/api/orders', async (route) => {
+    //  if (route.request().method() === 'POST') {
+    //    await route.fulfill({
+    //      status: 200,
+    //      contentType: 'application/json',
+    //      body: JSON.stringify({
+    //        success: true,
+    //        name: 'Краторный марсианский бургер',
+    //        order: { number: 12345 },
+    //      }),
+    //    });
+    //  } else {
+    //    await route.continue();
+    //  }
+    //});
 
     await page.addInitScript(() => {
       document.cookie = 'accessToken=Bearer mock-access-token';
